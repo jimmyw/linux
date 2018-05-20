@@ -496,6 +496,8 @@ static int wm831x_buckv_probe(struct platform_device *pdev)
 	dcdc->desc.owner = THIS_MODULE;
 	dcdc->desc.enable_reg = WM831X_DCDC_ENABLE;
 	dcdc->desc.enable_mask = 1 << id;
+	dcdc->desc.of_match = of_match_ptr(dcdc->name);
+	dcdc->desc.regulators_node = "regulators";
 
 	ret = wm831x_reg_read(wm831x, dcdc->base + WM831X_DCDC_ON_CONFIG);
 	if (ret < 0) {
@@ -520,6 +522,7 @@ static int wm831x_buckv_probe(struct platform_device *pdev)
 		config.init_data = pdata->dcdc[id];
 	config.driver_data = dcdc;
 	config.regmap = wm831x->regmap;
+	config.dev->of_node = wm831x->dev->of_node;
 
 	dcdc->regulator = devm_regulator_register(&pdev->dev, &dcdc->desc,
 						  &config);
@@ -652,12 +655,15 @@ static int wm831x_buckp_probe(struct platform_device *pdev)
 	dcdc->desc.enable_mask = 1 << id;
 	dcdc->desc.min_uV = 850000;
 	dcdc->desc.uV_step = 25000;
+	dcdc->desc.of_match = of_match_ptr(dcdc->name);
+	dcdc->desc.regulators_node = "regulators";
 
 	config.dev = pdev->dev.parent;
 	if (pdata)
 		config.init_data = pdata->dcdc[id];
 	config.driver_data = dcdc;
 	config.regmap = wm831x->regmap;
+	config.dev->of_node = wm831x->dev->of_node;
 
 	dcdc->regulator = devm_regulator_register(&pdev->dev, &dcdc->desc,
 						  &config);
@@ -853,12 +859,15 @@ static int wm831x_epe_probe(struct platform_device *pdev)
 	dcdc->desc.owner = THIS_MODULE;
 	dcdc->desc.enable_reg = WM831X_DCDC_ENABLE;
 	dcdc->desc.enable_mask = 1 << dcdc->desc.id;
+	dcdc->desc.of_match = of_match_ptr(dcdc->name);
+	dcdc->desc.regulators_node = "regulators";
 
 	config.dev = pdev->dev.parent;
 	if (pdata)
 		config.init_data = pdata->epe[id];
 	config.driver_data = dcdc;
 	config.regmap = wm831x->regmap;
+	config.dev->of_node = wm831x->dev->of_node;
 
 	dcdc->regulator = devm_regulator_register(&pdev->dev, &dcdc->desc,
 						  &config);

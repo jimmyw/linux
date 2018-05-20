@@ -268,12 +268,15 @@ static int wm831x_gp_ldo_probe(struct platform_device *pdev)
 	ldo->desc.bypass_mask = WM831X_LDO1_SWI;
 	ldo->desc.linear_ranges = wm831x_gp_ldo_ranges;
 	ldo->desc.n_linear_ranges = ARRAY_SIZE(wm831x_gp_ldo_ranges);
+	ldo->desc.of_match = of_match_ptr(ldo->name);
+	ldo->desc.regulators_node = "regulators";
 
 	config.dev = pdev->dev.parent;
 	if (pdata)
 		config.init_data = pdata->ldo[id];
 	config.driver_data = ldo;
 	config.regmap = wm831x->regmap;
+	config.dev->of_node = wm831x->dev->of_node;
 
 	ldo->regulator = devm_regulator_register(&pdev->dev, &ldo->desc,
 						 &config);
@@ -478,12 +481,15 @@ static int wm831x_aldo_probe(struct platform_device *pdev)
 	ldo->desc.enable_mask = 1 << id;
 	ldo->desc.bypass_reg = ldo->base;
 	ldo->desc.bypass_mask = WM831X_LDO7_SWI;
+	ldo->desc.of_match = of_match_ptr(ldo->name);
+	ldo->desc.regulators_node = "regulators";
 
 	config.dev = pdev->dev.parent;
 	if (pdata)
 		config.init_data = pdata->ldo[id];
 	config.driver_data = ldo;
 	config.regmap = wm831x->regmap;
+	config.dev->of_node = wm831x->dev->of_node;
 
 	ldo->regulator = devm_regulator_register(&pdev->dev, &ldo->desc,
 						 &config);
@@ -622,12 +628,15 @@ static int wm831x_alive_ldo_probe(struct platform_device *pdev)
 	ldo->desc.min_uV = 800000;
 	ldo->desc.uV_step = 50000;
 	ldo->desc.enable_time = 1000;
+	ldo->desc.of_match = of_match_ptr(ldo->name);
+	ldo->desc.regulators_node = "regulators";
 
 	config.dev = pdev->dev.parent;
 	if (pdata)
 		config.init_data = pdata->ldo[id];
 	config.driver_data = ldo;
 	config.regmap = wm831x->regmap;
+	config.dev->of_node = wm831x->dev->of_node;
 
 	ldo->regulator = devm_regulator_register(&pdev->dev, &ldo->desc,
 						 &config);
