@@ -1,0 +1,291 @@
+/*
+ * Copyright (c) 2014 Romain Perier <romain.perier@gmail.com>
+ *
+ * This file is dual-licensed: you can use it either under the terms
+ * of the GPL or the X11 license, at your option. Note that this dual
+ * licensing only applies to this file, and not this project as a
+ * whole.
+ *
+ *  a) This file is free software; you can redistribute it and/or
+ *     modify it under the terms of the GNU General Public License as
+ *     published by the Free Software Foundation; either version 2 of the
+ *     License, or (at your option) any later version.
+ *
+ *     This file is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ * Or, alternatively,
+ *
+ *  b) Permission is hereby granted, free of charge, to any person
+ *     obtaining a copy of this software and associated documentation
+ *     files (the "Software"), to deal in the Software without
+ *     restriction, including without limitation the rights to use,
+ *     copy, modify, merge, publish, distribute, sublicense, and/or
+ *     sell copies of the Software, and to permit persons to whom the
+ *     Software is furnished to do so, subject to the following
+ *     conditions:
+ *
+ *     The above copyright notice and this permission notice shall be
+ *     included in all copies or substantial portions of the Software.
+ *
+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ *     OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+/dts-v1/;
+#include "rk3066a.dtsi"
+//#include <dt-bindings/regulator/wm831x.h>
+
+/ {
+	model = "Minix X5";
+	compatible = "minix,x5", "rockchip,rk3066a";
+
+  aliases {
+		serial2 = &uart2;
+	};
+
+  chosen {
+		stdout-path = "serial2:115200n8";
+	};
+
+	memory@60000000 {
+		device_type = "memory";
+		reg = <0x60000000 0x30000000>;
+	};
+
+  vsys: vsys-regulator {
+		compatible = "regulator-fixed";
+		regulator-name = "vsys";
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+		regulator-always-on;
+		regulator-boot-on;
+	};
+};
+
+&cpu0 {
+	cpu0-supply = <&vdd_arm>;
+};
+
+
+&i2c1 {
+	status = "okay";
+	clock-frequency = <400000>;
+
+	wm18326: wm8326@34 {
+		compatible = "wlf,wm8326";
+		reg = <0x34>;
+		interrupt-parent = <&gpio6>;
+		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
+		//clocks = <&pmu_system_controller 0>;
+		//clock-names = "MCLK1";
+		//DCVDD-supply = <&ldo3_reg>;
+		//DBVDD1-supply = <&ldo3_reg>;
+		//wlf,ldo1ena = <&gpj0 4 0>;
+
+    // According to datasheet, it seems to typical connections all
+    // LDD are connected to system
+		SYSVDD-supply = <&vsys>;
+		PVDD-supply = <&vsys>;
+		LDO1VDD-supply = <&vsys>;
+		LDO2VDD-supply = <&vsys>;
+		LDO3VDD-supply = <&vsys>;
+		LDO4VDD-supply = <&vsys>;
+		LDO5VDD-supply = <&vsys>;
+		LDO6VDD-supply = <&vsys>;
+		LDO7VDD-supply = <&vsys>;
+		LDO8VDD-supply = <&vsys>;
+		LDO9VDD-supply = <&vsys>;
+		LDO10VDD-supply = <&vsys>;
+		LDO11VDD-supply = <&vsys>;
+		DC1VDD-supply = <&vsys>;
+		DC2VDD-supply = <&vsys>;
+    DC3VDD-supply = <&vsys>;
+    DC4VDD-supply = <&vsys>;
+
+    rtc: wm8326-rtc {
+      compatible = "wm8326-rtc";
+    };
+    clk: wm8326-clk {
+      compatible = "wm8326-clk";
+    };
+		regulators {
+			vcc18_cif: LDO1 {
+        compatible = "wm831x-ldo";
+				regulator-name = "LDO1";
+				regulator-always-on;
+        regulator-boot-on;
+				//constraint regulator-min-microvolt = <900000>;
+				//constraint regulator-max-microvolt = <3300000>;
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+			};
+			vccio_wl: LDO2 {
+        compatible = "wm831x-ldo";
+				regulator-name = "LDO2";
+				regulator-always-on;
+        regulator-boot-on;
+				//constraint regulator-min-microvolt = <900000>;
+				//constraint regulator-max-microvolt = <3300000>;
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+			};
+			vdd_12: LDO3 {
+        compatible = "wm831x-ldo";
+				regulator-name = "LDO3";
+				regulator-always-on;
+        regulator-boot-on;
+				//constraint regulator-min-microvolt = <900000>;
+				//constraint regulator-max-microvolt = <3300000>;
+				regulator-min-microvolt = <1200000>;
+				regulator-max-microvolt = <1200000>;
+			};
+			vdd_11: LDO4 {
+        compatible = "wm831x-ldo";
+				regulator-name = "LDO4";
+				regulator-always-on;
+        regulator-boot-on;
+        //regulator-mode = <WM831X_OPMODE_IDLE>;
+				regulator-min-microvolt = <1100000>;
+				regulator-max-microvolt = <1100000>;
+				//constraint regulator-min-microvolt = <900000>;
+				//constraint regulator-max-microvolt = <3300000>;
+			};
+			vcc_25: LDO5 {
+        compatible = "wm831x-ldo";
+				regulator-name = "LDO5";
+				regulator-always-on;
+        regulator-boot-on;
+        //regulator-mode = <WM831X_OPMODE_IDLE>;
+				regulator-min-microvolt = <2500000>;
+        regulator-max-microvolt = <2500000>;
+				//constraint regulator-min-microvolt = <900000>;
+				//constraint regulator-max-microvolt = <3300000>;
+			};
+			vcc_33: LDO6 {
+        compatible = "wm831x-ldo";
+				regulator-name = "LDO6";
+				regulator-always-on;
+        regulator-boot-on;
+        //regulator-mode = <WM831X_OPMODE_STANDBY>;
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+				//constraint regulator-min-microvolt = <900000>;
+				//constraint regulator-max-microvolt = <3300000>;
+			};
+			vcc28_cif: LDO7 {
+        compatible = "wm831x-ldo";
+				regulator-name = "LDO7";
+				regulator-always-on;
+        regulator-boot-on;
+				//constraint regulator-min-microvolt = <1000000>;
+				//constraint regulator-max-microvolt = <3500000>;
+				regulator-min-microvolt = <2800000>;
+				regulator-max-microvolt = <2800000>;
+			};
+			vcca_33: LDO8 {
+        compatible = "wm831x-ldo";
+				regulator-name = "LDO8";
+				regulator-always-on;
+        regulator-boot-on;
+				//constraint regulator-min-microvolt = <1000000>;
+				//constraint regulator-max-microvolt = <3500000>;
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+			};
+			vcc_tp: LDO9 {
+        compatible = "wm831x-ldo";
+				regulator-name = "LDO9";
+				regulator-always-on;
+        regulator-boot-on;
+				//constraint regulator-min-microvolt = <1000000>;
+				//constraint regulator-max-microvolt = <3500000>;
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+			};
+			vcc_flash: LDO10 {
+        compatible = "wm831x-ldo";
+				regulator-name = "LDO10";
+				regulator-always-on;
+        regulator-boot-on;
+				//constraint regulator-min-microvolt = <1000000>;
+				//constraint regulator-max-microvolt = <3500000>;
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+			};
+			vcc_ldo11: LDO11 {
+        compatible = "wm831x-ldo";
+				regulator-name = "LDO11";
+				regulator-min-microvolt = <800000>;
+				regulator-max-microvolt = <1550000>;
+			};
+			vdd_core: DCDC1 { // vdd_log
+        compatible = "wm831x-dcdc";
+				regulator-name = "DCDC1";
+				regulator-always-on;
+        regulator-boot-on;
+				//constraint regulator-min-microvolt = <600000>;
+        //constraint regulator-max-microvolt = <1800000>;
+				regulator-min-microvolt = <1150000>;
+        regulator-max-microvolt = <1150000>;
+			};
+			vdd_arm: DCDC2 { // vdd_arm
+        compatible = "wm831x-dcdc";
+				regulator-name = "DCDC2";
+				regulator-always-on;
+        regulator-boot-on;
+				//constraint regulator-min-microvolt = <600000>;
+        //constraint regulator-max-microvolt = <1800000>;
+				regulator-min-microvolt = <1100000>;
+        regulator-max-microvolt = <1100000>;
+			};
+			vcc_ddr: DCDC3 {
+        compatible = "wm831x-dcdc";
+				regulator-name = "DCDC3";
+				regulator-always-on;
+        regulator-boot-on;
+				//constraint regulator-min-microvolt = <850000>;
+        //constraint regulator-max-microvolt = <3400000>;
+				regulator-min-microvolt = <1150000>;
+        regulator-max-microvolt = <1150000>;
+			};
+			vcc_io: DCDC4 {
+        compatible = "wm831x-dcdc";
+				regulator-name = "DCDC4";
+				regulator-always-on;
+        regulator-boot-on;
+				//constraint regulator-min-microvolt = <850000>;
+        //constraint regulator-max-microvolt = <3400000>;
+				regulator-min-microvolt = <3000000>;
+        regulator-max-microvolt = <3000000>;
+			};
+		};
+
+	};
+};
+
+/*
+&uart0 {
+	status = "okay";
+};
+
+&uart1 {
+	status = "okay";
+};
+
+&uart2 {
+	status = "okay";
+};*/
+
+&wdt {
+	status = "okay";
+};
+
