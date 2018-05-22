@@ -49,11 +49,17 @@
 	compatible = "minix,x5", "rockchip,rk3066a";
 
   aliases {
+		serial0 = &uart0;
+		serial1 = &uart1;
 		serial2 = &uart2;
+		serial3 = &uart3;
 	};
 
   chosen {
-		stdout-path = "serial2:115200n8";
+		//bootargs = "console=ttyS2,115200n8";
+		//stdout-path = "serial2:115200n8";
+		//linux,initrd-start = <0x62000000>;
+		//linux,initrd-end = <0x62250000>;
 	};
 
 	memory@60000000 {
@@ -272,7 +278,6 @@
 	};
 };
 
-/*
 &uart0 {
 	status = "okay";
 };
@@ -283,9 +288,18 @@
 
 &uart2 {
 	status = "okay";
-};*/
+};
 
 &wdt {
 	status = "okay";
 };
+
+&mmc0 {
+	bus-width = <4>;
+	cap-mmc-highspeed;
+	cap-sd-highspeed;
+	vmmc-supply = <&vcc_io>;
+	status = "okay";
+};
+
 
