@@ -294,10 +294,37 @@
 	status = "okay";
 };
 
+&emac {
+	status = "okay";
+
+	phy = <&phy0>;
+	phy-supply = <&vcc_io>;
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&phy_int>;
+
+	phy0: ethernet-phy@0 {
+		reg = <0>;
+		interrupt-parent = <&gpio1>;
+		interrupts = <RK_PD2 IRQ_TYPE_LEVEL_LOW>;
+	};
+};
+
+&pinctrl {
+	lan8720a {
+		phy_int: phy-int {
+			rockchip,pins = <RK_GPIO1 26 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+	};
+};
+
+
 &mmc0 {
 	bus-width = <4>;
 	cap-mmc-highspeed;
 	cap-sd-highspeed;
+	pinctrl-names = "default";
+	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
 	vmmc-supply = <&vcc_io>;
 	status = "okay";
 };
