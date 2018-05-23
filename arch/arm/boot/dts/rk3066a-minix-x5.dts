@@ -318,6 +318,18 @@
 	};
 };
 
+&usbphy {
+	status = "okay";
+};
+
+&usb_host {
+	status = "okay";
+};
+
+&usb_otg {
+	status = "okay";
+};
+
 
 &mmc0 {
 	bus-width = <4>;
