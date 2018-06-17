@@ -4,7 +4,7 @@
  *  Copyright (C) 2005-2009 Fuzhou Rockchip Electronics
  *  ZYF <zyf@rock-chips.com>
  *
- *   
+ *
  */
 
 #include <linux/module.h>
@@ -39,7 +39,7 @@ const char rknand_base_version[] = "rknand_base.c version: 4.23 20110516";
 //#define PAGE_REMAP
 
 #ifndef CONFIG_RKFTL_PAGECACHE_SIZE
-#define CONFIG_RKFTL_PAGECACHE_SIZE  64 //¶¨ÒåpageÓ³ÉäÇø´óÐ¡£¬µ¥Î»ÎªMB,mount ÔÚ/data/dataÏÂ¡£
+#define CONFIG_RKFTL_PAGECACHE_SIZE  64 //????pageÓ³??????Ð¡????Î»ÎªMB,mount ??/data/data?Â¡?
 #endif
 
 unsigned long SysImageWriteEndAdd = 0;
@@ -63,41 +63,41 @@ static const int s_debug = 0;
 * when RK28 LBA FLASH init,the value will be modify to the value in the nand flash.
 */
 static struct mtd_partition rk28_partition_info[] = {
-	{ 
+	{
 	  name: "misc",
 	  offset:  0x2000*0x200,
 	  size:    0x2000*0x200,//100MB
 	},
 
-	{ 
+	{
 	  name: "kernel",
 	  offset:  0x4000*0x200,
 	  size:   0x4000*0x200,//200MB
 	},
 
-	{ 
+	{
 	  name: "boot",
 	  offset:  0x8000*0x200,
 	  size:   0x2000*0x200,//200MB
 	},
 
-	{ 
+	{
 	  name: "system",
 	  offset:  0xE000*0x200,
 	  size:   0x38000*0x200,//200MB
 	},
-     
+
 };
 
 #ifdef PAGE_REMAP
 static struct mtd_partition rk28_page_part_info[] = {
-	{ 
+	{
 	  name: "pagecache",
 	  offset:  0,
 	  size:    CONFIG_RKFTL_PAGECACHE_SIZE * 0x800*0x200,//32MB
 	},
 
-	{ 
+	{
 	  name: "swap",
 	  offset:  (CONFIG_RKFTL_PAGECACHE_SIZE) * 0x800*0x200,
 	  size:    64 * 0x800*0x200,//64MB
@@ -126,7 +126,7 @@ struct rknand_chip {
 
 struct rknand_info {
 	struct mtd_info		mtd;
-    struct mtd_info		page_mtd;    
+    struct mtd_info		page_mtd;
 	struct mtd_partition *parts;
 	struct rknand_chip	rknand;
     struct task_struct *thread;
@@ -163,7 +163,7 @@ static int rkNand_proc_read(char *page,
         buf += rkNand_proc_ftlread(buf);
 #ifdef  CONFIG_MTD_RKNAND_BUFFER
         buf += rkNand_proc_bufread(buf);
-#endif        
+#endif
     }
 	return buf - page < count ? buf - page : count;
 }
@@ -179,7 +179,7 @@ static void rk28nand_create_procfs(void)
         my_proc_entry->write_proc = NULL;
         my_proc_entry->read_proc = rkNand_proc_read;
         my_proc_entry->data = NULL;
-    } 
+    }
 }
 
 int rknand_schedule_enable(int en)
@@ -406,17 +406,17 @@ static int rk28xxnand_panic_write(struct mtd_info *mtd, loff_t to, size_t len, s
 extern int FtlGetIdBlockSysData(char * buf, int Sector);
 int GetIdBlockSysData(char * buf, int Sector)
 {
-    return (FtlGetIdBlockSysData(buf,Sector)); 
+    return (FtlGetIdBlockSysData(buf,Sector));
 }
 
 char GetSNSectorInfo(char * pbuf)
 {
-    return (GetIdBlockSysData(pbuf,3));    
+    return (GetIdBlockSysData(pbuf,3));
 }
 
 char GetChipSectorInfo(char * pbuf)
 {
-    return (GetIdBlockSysData(pbuf,2));  
+    return (GetIdBlockSysData(pbuf,2));
 }
 
 /* cpufreq driver support */
@@ -436,7 +436,7 @@ static int rk29_nand_cpufreq_transition(struct notifier_block *nb, unsigned long
 	unsigned long newclk;
 
 	newclk = clk_get_rate(info->clk);
-	if (val == CPUFREQ_POSTCHANGE && newclk != info->clk_rate) 
+	if (val == CPUFREQ_POSTCHANGE && newclk != info->clk_rate)
 	{
 		rk29xx_nand_timing_cfg(info);
 	}
@@ -480,7 +480,7 @@ static int rk28xxnand_init(struct rknand_info *nand_info)
 	struct rknand_chip *rknand = &nand_info->rknand;
 #ifdef PAGE_REMAP
 	struct mtd_info	   *page_mtd = &nand_info->page_mtd;
-#endif    
+#endif
 
 	nand_info->clk = clk_get(NULL, "nandc");
 	clk_enable(nand_info->clk);
@@ -497,11 +497,11 @@ static int rk28xxnand_init(struct rknand_info *nand_info)
     }
     rk29_nand_cpufreq_register(nand_info);
     rk29xx_nand_timing_cfg(nand_info);
-    
+
     NAND_DEBUG(NAND_DEBUG_LEVEL0,"FTLInit OK: \n");
     mtd->size = (uint64_t)NandGetCapacity()*0x200;
     //readflash modify rk28_partition_info
-    
+
     NAND_DEBUG(NAND_DEBUG_LEVEL0,"mtd->size: 0x%012llx\n",mtd->size);
     mtd->oobsize = 0;
     mtd->oobavail = 0;
@@ -509,7 +509,7 @@ static int rk28xxnand_init(struct rknand_info *nand_info)
     mtd->erasesize = 32*0x200; //sectorFlashGetPageSize()
     mtd->writesize = 8*0x200; //FlashGetPageSize()
 
-	// Fill in remaining MTD driver data 
+	// Fill in remaining MTD driver data
 	mtd->type = MTD_NANDFLASH;//MTD_RAM;//
 	mtd->flags = (MTD_WRITEABLE|MTD_NO_ERASE);//
 	mtd->erase = rk28xxnand_erase;
@@ -540,7 +540,7 @@ static int rk28xxnand_init(struct rknand_info *nand_info)
     page_mtd->erasesize = FlashGetPageSize()*0x200; //sector
     page_mtd->writesize = FlashGetPageSize()*0x200;
 
-	// Fill in remaining MTD driver data 
+	// Fill in remaining MTD driver data
 	page_mtd->type = MTD_NANDFLASH;//MTD_RAM;//
 	page_mtd->flags = (MTD_WRITEABLE|MTD_NO_ERASE);//
 	page_mtd->erase = rk28xxnand_erase;
@@ -567,38 +567,38 @@ static int rk28xxnand_init(struct rknand_info *nand_info)
 
 
 /*
- * CMY: Ôö¼ÓÁË¶ÔÃüÁîÐÐ·ÖÇøÐÅÏ¢µÄÖ§³Ö
- *		ÈôcmdlineÓÐÌá¹©·ÖÇøÐÅÏ¢£¬ÔòÊ¹ÓÃcmdlineµÄ·ÖÇøÐÅÏ¢½øÐÐ·ÖÇø
- *		ÈôcmdlineÃ»ÓÐÌá¹©·ÖÇøÐÅÏ¢£¬ÔòÊ¹ÓÃÄ¬ÈÏµÄ·ÖÇøÐÅÏ¢(rk28_partition_info)½øÐÐ·ÖÇø
+ * CMY: ?????Ë¶??????Ð·?????Ï¢??Ö§??
+ *		??cmdline???á¹©??????Ï¢????Ê¹??cmdline?Ä·?????Ï¢???Ð·???
+ *		??cmdlineÃ»???á¹©??????Ï¢????Ê¹??Ä¬?ÏµÄ·?????Ï¢(rk28_partition_info)???Ð·???
  */
 
 #ifdef CONFIG_MTD_CMDLINE_PARTS
-const char *part_probes[] = { "cmdlinepart", NULL }; 
-#endif 
+const char *part_probes[] = { "cmdlinepart", NULL };
+#endif
 
 static int rk28xxnand_add_partitions(struct rknand_info *nand_info)
 {
 #ifdef CONFIG_MTD_CMDLINE_PARTS
-    int num_partitions = 0; 
+    int num_partitions = 0;
 
-	// ´ÓÃüÁîÐÐ½âÎö·ÖÇøµÄÐÅÏ¢
-    num_partitions = parse_mtd_partitions(&(nand_info->mtd), part_probes, &nand_info->parts, 0); 
+	// ???????Ð½???????????Ï¢
+    num_partitions = parse_mtd_partitions(&(nand_info->mtd), part_probes, &nand_info->parts, 0);
     printk("num_partitions = %d\n",num_partitions);
-    if(num_partitions > 0) { 
+    if(num_partitions > 0) {
     	int i;
-    	for (i = 0; i < num_partitions; i++) 
+    	for (i = 0; i < num_partitions; i++)
         {
             nand_info->parts[i].offset *= 0x200;
             nand_info->parts[i].size   *=0x200;
 		    //printk(KERN_ERR"offset 0x%012llx  size :0x%012llx\n",nand_info->parts[i].offset, nand_info->parts[i].size);
     	}
         nand_info->parts[num_partitions - 1].size = nand_info->mtd.size - nand_info->parts[num_partitions - 1].offset;
-        
+
 		g_num_partitions = num_partitions;
 		return add_mtd_partitions(&nand_info->mtd, nand_info->parts, num_partitions);
-    } 
-#endif 
-	// Èç¹ûÃüÁîÐÐÃ»ÓÐÌá¹©·ÖÇøÐÅÏ¢£¬ÔòÊ¹ÓÃÄ¬ÈÏµÄ·ÖÇøÐÅÏ¢
+    }
+#endif
+	// ??????????Ã»???á¹©??????Ï¢????Ê¹??Ä¬?ÏµÄ·?????Ï¢
 	printk("parse_mtd_partitions\n");
 
 //	rk28_partition_info[1].size = nand_info->mtd.size - ((ROOTFS_PART_SIZE + PARA_PART_SIZE + KERNEL_PART_SIZE)*0x100000);
@@ -618,13 +618,13 @@ static int rknand_probe(struct platform_device *pdev)
 	gpNandInfo = kzalloc(sizeof(struct rknand_info), GFP_KERNEL);
 	if (!gpNandInfo)
 		return -ENOMEM;
-    
+
     nand_info = gpNandInfo;
-    
+
 	nand_info->mtd.name = dev_name(&pdev->dev);//pdev->dev.bus_id
 	nand_info->mtd.priv = &nand_info->rknand;
 	nand_info->mtd.owner = THIS_MODULE;
-    
+
 	nand_info->page_mtd.name = dev_name(&pdev->dev);//pdev->dev.bus_id
 	nand_info->page_mtd.priv = &nand_info->rknand;
 	nand_info->page_mtd.owner = THIS_MODULE;
@@ -640,22 +640,22 @@ static int rknand_probe(struct platform_device *pdev)
 		err = -ENXIO;
 		goto  exit_free;
 	}
-#endif	
+#endif
 	rk28nand_create_procfs();
 	/*{
 	    char pbuf[512];
 	    GetSNSectorInfo(pbuf);
         printk("SN: %x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x",pbuf[2],pbuf[3],pbuf[4],pbuf[5],pbuf[6],pbuf[7],pbuf[8],pbuf[9],
             pbuf[10],pbuf[11],pbuf[12],pbuf[13],pbuf[14],pbuf[15],pbuf[16],pbuf[17]);
-    } */  
-	
+    } */
+
 	rk28xxnand_add_partitions(nand_info);
 
 #ifdef PAGE_REMAP
     rk28_page_part_info[1].size = nand_info->page_mtd.size - rk28_page_part_info[0].size;
     add_mtd_partitions(&nand_info->page_mtd, rk28_page_part_info, 2);
 #endif
- 
+
     parts = nand_info->parts;
     for(i=0;i<g_num_partitions;i++)
     {
@@ -696,7 +696,7 @@ static int rknand_remove(struct device *dev)
 			del_mtd_device(&nand_info->mtd);
 
 		//rknand_release(&nand_info->mtd);
-		release_mem_region(res->start, size);		
+		release_mem_region(res->start, size);
 		kfree(nand_info);
 	}
 	return 0;
@@ -722,7 +722,7 @@ void rknand_shutdown(struct platform_device *pdev)
     //NAND_DEBUG(NAND_DEBUG_LEVEL0,"rknand_shutdown...\n");
     printk("rknand_shutdown...\n");
     gpNandInfo->rknand.rknand_schedule_enable = 0;
-    rknand_buffer_shutdown();    
+    rknand_buffer_shutdown();
 #else
 	struct rknand_chip *nand_info = &gpNandInfo->rknand;
     nand_info->rknand_schedule_enable = 0;
@@ -779,7 +779,7 @@ module_exit(rknand_exit);
 
 #if 0//def CONFIG_rknand
 /*
-×¢²áÒ»¸ösys dev £¬ÔÚ¹Ø»úºÍ¸´Î»Ê±»Øµ÷£¬°Ñflash¹Ø¼üÐÅÏ¢Ð´µ½nand flashÖÐ£¬ÏÂ´Î¿ª»úÊ±¿ÉÒÔ¿ìËÙ¿ª»ú¡£
+×¢??Ò»??sys dev ???Ú¹Ø»??Í¸?Î»Ê±?Øµ÷£¬°?flash?Ø¼???Ï¢Ð´??nand flash?Ð£??Â´Î¿???Ê±???Ô¿??Ù¿?????
 */
 
 #include <linux/sysdev.h>
@@ -800,7 +800,7 @@ static int rknand_sys_suspend(struct sys_device *dev, pm_message_t state)
     else
     {
         nand_info->pFlashCallBack = FtlCacheWriteBack;
-    }  
+    }
     NAND_DEBUG(NAND_DEBUG_LEVEL0,"...rknand_sys_suspend done...\n");
 	return 0;
 
@@ -819,7 +819,7 @@ static int rknand_sys_shutdown(struct sys_device *dev)
 	struct rknand_chip *nand_info = &gpNandInfo->rknand;
     NAND_DEBUG(NAND_DEBUG_LEVEL0,"...rknand_sys_shutdown...\n");
     nand_info->rknand_schedule_enable = 0;
-    
+
     if (nand_info->state == FL_READY)
     {
         //rknand_get_device(FL_UNVALID);
@@ -830,7 +830,7 @@ static int rknand_sys_shutdown(struct sys_device *dev)
     else
     {//flash not ready,use call back
         nand_info->pFlashCallBack = NandDeInit;
-    } 
+			}
 	return 0;
 }
 

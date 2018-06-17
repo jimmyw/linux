@@ -5,7 +5,7 @@
 config MTD_RKNAND
 	tristate "RK NAND Device Support"
 	depends on MTD
-	select MTD_RK_NAND_IDS
+		#select MTD_RK_NAND_IDS
 	help
 	  RK NAND Device Support
 if MTD_RKNAND
